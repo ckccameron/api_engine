@@ -21,17 +21,17 @@ task import: :environment do
   end
   puts "Merchants import: Successful"
 
-  CSV.foreach('./db/data/invoices.csv', headers: true, header_converters: :symbol, converters: :all) do |row|
-    Invoice.create(row.to_h)
-  end
-  puts "Invoices import: Successful"
-
   CSV.foreach('./db/data/items.csv', headers: true, header_converters: :symbol, converters: :all) do |row|
     item = Item.create(row.to_h)
     item.unit_price = (row[:unit_price] / 100.00)
     item.save
   end
   puts "Items import: Successful"
+
+  CSV.foreach('./db/data/invoices.csv', headers: true, header_converters: :symbol, converters: :all) do |row|
+    Invoice.create(row.to_h)
+  end
+  puts "Invoices import: Successful"
 
   CSV.foreach('./db/data/invoice_items.csv', headers: true, header_converters: :symbol, converters: :all) do |row|
     InvoiceItem.create(row.to_h)

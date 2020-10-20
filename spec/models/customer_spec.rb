@@ -8,7 +8,6 @@ describe Customer, type: :model do
               created_at: "2012-03-27 14:54:11 UTC",
               updated_at: "2012-03-27 14:54:11 UTC"
             }
-
     customer = Customer.new(attrs)
 
     expect(customer).to be_a Customer

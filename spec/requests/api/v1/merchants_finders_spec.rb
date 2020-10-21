@@ -67,4 +67,33 @@ describe "Merchants finder requests" do
     expect(merchant_result[:data][:attributes]).to have_key(:name)
     expect(merchant_result[:data][:attributes][:name]).to be_an(String)
   end
+
+  it "can return index of merchants that match search criteria" do
+    create(:merchant, name: "Basketball Blvd")
+    create(:merchant, name: "Basketball Bonanza")
+    create(:merchant, name: "Full Court Press")
+    create(:merchant, name: "Goooaaalll")
+
+    get "/api/v1/merchants/find_all?name=ball"
+
+    expect(response).to be_successful
+
+    merchants_results = JSON.parse(response.body, symbolize_names: true)
+    names = merchants_results[:data].map do |merchant|
+      merchant[:attributes][:name].downcase
+    end
+
+    expect(merchants_results[:data].count).to eq(2)
+    expect(merchants_results[:data]).to be_a(Hash)
+    merchants_results[:data].each do |merchant|
+      expect(merchant[:data]).to have_key(:id)
+      expect(merchant[:data]).to have_key(:type)
+      expect(merchant[:data]).to have_key(:attributes)
+      expect(merchant[:data][:type]).to eq("merchant")
+      expect(merchant[:data][:attributes]).to have_key(:id)
+      expect(merchant[:data][:attributes][:id]).to be_an(Integer)
+      expect(merchant[:data][:attributes]).to have_key(:name)
+      expect(merchant[:data][:attributes][:name]).to be_an(String)
+    end
+  end
 end

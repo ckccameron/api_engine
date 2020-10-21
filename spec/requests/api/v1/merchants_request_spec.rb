@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "Merchants API" do
+describe "Merchant requests" do
   it "sends index of merchants" do
     create_list(:merchant, 3)
 

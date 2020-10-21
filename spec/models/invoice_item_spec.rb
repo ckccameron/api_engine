@@ -21,4 +21,9 @@ describe InvoiceItem, type: :model do
     expect(invoice_item.created_at).to eq("2012-03-27 14:54:11 UTC")
     expect(invoice_item.updated_at).to eq("2012-03-27 14:54:11 UTC")
   end
+
+  describe "relationships" do
+    it { should belong_to(:item) }
+    it { should belong_to(:invoice) }
+  end
 end

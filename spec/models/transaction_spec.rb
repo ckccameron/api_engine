@@ -21,4 +21,8 @@ describe Transaction, type: :model do
     expect(transaction.created_at).to eq("2012-03-27 14:54:09 UTC")
     expect(transaction.updated_at).to eq("2012-03-27 14:54:09 UTC")
   end
+
+  describe "relationships" do
+    it { should belong_to(:invoice) }
+  end
 end

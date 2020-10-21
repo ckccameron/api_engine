@@ -20,4 +20,23 @@ describe Merchant, type: :model do
     it { should have_many(:invoices) }
     it { should have_many(:transactions).through(:invoices) }
   end
+
+  describe "class methods" do
+    it ".find_single_merchant(param)" do
+      merchant = create(:merchant, name: "The Shop")
+      param = {"name": "sho"}
+
+      expect(Merchant.find_single_merchant(param)).to eq(merchant)
+    end
+
+    it ".find_all_merchants(param)" do
+      merchant1 = create(:merchant, name: "The Shop")
+      merchant2 = create(:merchant, name: "Showtime")
+      merchant3 = create(:merchant, name: "Shabooya!")
+      param = {"name": "sho"}
+
+      expect(Merchant.find_all_merchants(param)).to eq([merchant1, merchant2])
+      expect(Merchant.find_all_merchants(param)).to_not include(merchant3)
+    end
+  end
 end

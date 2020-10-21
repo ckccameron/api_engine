@@ -20,4 +20,13 @@ describe Merchant, type: :model do
     it { should have_many(:invoices) }
     it { should have_many(:transactions).through(:invoices) }
   end
+
+  describe "class methods" do
+    it ".find_single_merchant(param)" do
+      merchant = create(:merchant, name: "The Shop")
+      param = {"name": "sho"}
+
+      expect(Merchant.find_single_merchant(param)).to eq(merchant)
+    end
+  end
 end

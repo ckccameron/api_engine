@@ -47,11 +47,30 @@ describe "Merchants API" do
     merchant = Merchant.last
 
     body = JSON.parse(response.body, symbolize_names: true)
-    
+
     expect(body[:data]).to have_key(:id)
     expect(body[:data]).to have_key(:type)
     expect(body[:data]).to have_key(:attributes)
     expect(body[:data][:attributes][:id]).to eq(merchant.id)
     expect(body[:data][:attributes][:name]).to eq(merchant.name)
+  end
+
+  it "allows for a merchant to be updated" do
+    merchant = create(:merchant)
+    id = merchant.id
+    old_name = Merchant.last.name
+
+    patch "/api/v1/merchants/#{id}", params: {name: "It's A New Day"}
+
+    expect(response).to be_successful
+
+    body = JSON.parse(response.body, symbolize_names: true)
+    
+    expect(body[:data]).to have_key(:id)
+    expect(body[:data]).to have_key(:type)
+    expect(body[:data]).to have_key(:attributes)
+    expect(body[:data][:attributes][:id]).to eq(merchant.id)
+    expect(body[:data][:attributes][:name]).to eq("It's A New Day")
+    expect(body[:data][:attributes][:name]).to_not eq(old_name)
   end
 end

@@ -44,13 +44,35 @@ describe "Item requests" do
     expect(response).to be_successful
 
     body = JSON.parse(response.body, symbolize_names: true)
-    
+
     expect(body[:data]).to have_key(:id)
     expect(body[:data]).to have_key(:type)
     expect(body[:data]).to have_key(:attributes)
     expect(body[:data][:id]).to eq(id.to_s)
     expect(body[:data][:type]).to eq("item")
     expect(body[:data][:attributes][:id]).to eq(id)
+    expect(body[:data][:attributes][:name]).to eq(item.name)
+    expect(body[:data][:attributes][:description]).to eq(item.description)
+    expect(body[:data][:attributes][:unit_price]).to eq(item.unit_price)
+    expect(body[:data][:attributes][:merchant_id]).to eq(item.merchant_id)
+  end
+
+  it "allows a new item to be created" do
+    merchant = create(:merchant)
+
+    post "/api/v1/items", params: {name: "Oxnard by Anderson .Paak", description: "Soul Music", unit_price: 15.50, merchant_id: merchant.id}
+
+    expect(response).to be_successful
+
+    item = Item.last
+
+    body = JSON.parse(response.body, symbolize_names: true)
+    
+    expect(body[:data]).to have_key(:id)
+    expect(body[:data]).to have_key(:type)
+    expect(body[:data][:type]).to eq("item")
+    expect(body[:data]).to have_key(:attributes)
+    expect(body[:data][:attributes][:id]).to eq(item.id)
     expect(body[:data][:attributes][:name]).to eq(item.name)
     expect(body[:data][:attributes][:description]).to eq(item.description)
     expect(body[:data][:attributes][:unit_price]).to eq(item.unit_price)

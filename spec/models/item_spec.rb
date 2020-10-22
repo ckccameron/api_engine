@@ -36,5 +36,16 @@ describe Item, type: :model do
 
       expect(Item.find_single_item(param)).to eq(item)
     end
+
+    it ".find_all_items(param)" do
+      merchant = create(:merchant)
+      item1 = create(:item, name: "Basketball", merchant_id: merchant.id)
+      item2 = create(:item, name: "Football", merchant_id: merchant.id)
+      item3= create(:item, name: "Boxing Gloves", merchant_id: merchant.id)
+      param = {"name": "ball"}
+
+      expect(Item.find_all_items(param)).to eq([item1, item2])
+      expect(Item.find_all_items(param)).to_not include(item3)
+    end
   end
 end

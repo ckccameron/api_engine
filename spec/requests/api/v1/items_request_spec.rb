@@ -67,7 +67,7 @@ describe "Item requests" do
     item = Item.last
 
     body = JSON.parse(response.body, symbolize_names: true)
-    
+
     expect(body[:data]).to have_key(:id)
     expect(body[:data]).to have_key(:type)
     expect(body[:data][:type]).to eq("item")
@@ -76,6 +76,31 @@ describe "Item requests" do
     expect(body[:data][:attributes][:name]).to eq(item.name)
     expect(body[:data][:attributes][:description]).to eq(item.description)
     expect(body[:data][:attributes][:unit_price]).to eq(item.unit_price)
+    expect(body[:data][:attributes][:merchant_id]).to eq(item.merchant_id)
+  end
+
+  it "allows an item to be updated" do
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id)
+    id = item.id
+    old_name = Item.last.name
+    old_price = Item.last.unit_price
+
+    patch "/api/v1/items/#{id}", params: {name: "New Wave", unit_price: 25.77}
+
+    expect(response).to be_successful
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body[:data]).to have_key(:id)
+    expect(body[:data]).to have_key(:type)
+    expect(body[:data]).to have_key(:attributes)
+    expect(body[:data][:attributes][:id]).to eq(item.id)
+    expect(body[:data][:attributes][:name]).to eq("New Wave")
+    expect(body[:data][:attributes][:name]).to_not eq(old_name)
+    expect(body[:data][:attributes][:description]).to eq(item.description)
+    expect(body[:data][:attributes][:unit_price]).to eq(25.77)
+    expect(body[:data][:attributes][:unit_price]).to_not eq(old_price)
     expect(body[:data][:attributes][:merchant_id]).to eq(item.merchant_id)
   end
 end

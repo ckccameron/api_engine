@@ -103,4 +103,21 @@ describe "Item requests" do
     expect(body[:data][:attributes][:unit_price]).to_not eq(old_price)
     expect(body[:data][:attributes][:merchant_id]).to eq(item.merchant_id)
   end
+
+  it "allows a merchant to be destroyed" do
+    merchant = create(:merchant)
+    item1 = create(:item, merchant_id: merchant.id)
+    item2 = create(:item, merchant_id: merchant.id)
+    id1 = item1.id
+    id2 = item2.id
+
+    expect(Item.count).to eq(2)
+
+    delete "/api/v1/items/#{id1}"
+
+    expect(response.status).to eq(204)
+
+    expect(Item.count).to eq(1)
+    expect{ Item.find(id1) }.to raise_error(ActiveRecord::RecordNotFound)
+  end
 end

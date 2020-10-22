@@ -22,7 +22,7 @@ describe "Merchants finder requests" do
     expect(merchant_result[:data][:attributes]).to have_key(:id)
     expect(merchant_result[:data][:attributes][:id]).to be_an(Integer)
     expect(merchant_result[:data][:attributes]).to have_key(:name)
-    expect(merchant_result[:data][:attributes][:name]).to be_an(String)
+    expect(merchant_result[:data][:attributes][:name]).to be_a(String)
     expect(name).to include(query.downcase)
   end
 
@@ -46,7 +46,7 @@ describe "Merchants finder requests" do
     expect(merchant_result[:data][:attributes]).to have_key(:id)
     expect(merchant_result[:data][:attributes][:id]).to be_an(Integer)
     expect(merchant_result[:data][:attributes]).to have_key(:name)
-    expect(merchant_result[:data][:attributes][:name]).to be_an(String)
+    expect(merchant_result[:data][:attributes][:name]).to be_a(String)
 
     attribute2 = "updated_at"
     query2 = "Oct"
@@ -65,7 +65,7 @@ describe "Merchants finder requests" do
     expect(merchant_result[:data][:attributes]).to have_key(:id)
     expect(merchant_result[:data][:attributes][:id]).to be_an(Integer)
     expect(merchant_result[:data][:attributes]).to have_key(:name)
-    expect(merchant_result[:data][:attributes][:name]).to be_an(String)
+    expect(merchant_result[:data][:attributes][:name]).to be_a(String)
   end
 
   it "can return index of merchants that match search criteria" do
@@ -95,7 +95,7 @@ describe "Merchants finder requests" do
       expect(merchant[:attributes]).to have_key(:id)
       expect(merchant[:attributes][:id]).to be_an(Integer)
       expect(merchant[:attributes]).to have_key(:name)
-      expect(merchant[:attributes][:name]).to be_an(String)
+      expect(merchant[:attributes][:name]).to be_a(String)
     end
     names.each do |name|
       expect(name).to include(query)
@@ -127,7 +127,7 @@ describe "Merchants finder requests" do
       expect(merchant[:attributes]).to have_key(:id)
       expect(merchant[:attributes][:id]).to be_an(Integer)
       expect(merchant[:attributes]).to have_key(:name)
-      expect(merchant[:attributes][:name]).to be_an(String)
+      expect(merchant[:attributes][:name]).to be_a(String)
     end
 
     attribute2 = "updated_at"
@@ -149,7 +149,7 @@ describe "Merchants finder requests" do
       expect(merchant[:attributes]).to have_key(:id)
       expect(merchant[:attributes][:id]).to be_an(Integer)
       expect(merchant[:attributes]).to have_key(:name)
-      expect(merchant[:attributes][:name]).to be_an(String)
+      expect(merchant[:attributes][:name]).to be_a(String)
     end
   end
 end

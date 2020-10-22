@@ -14,4 +14,13 @@ class Item < ApplicationRecord
       attribute_search(param).first
     end
   end
+
+  def self.find_all_items(param)
+    attribute = param.keys.first
+    if attribute == 'created_at' || attribute == 'updated_at'
+      date_search(param)
+    else
+      attribute_search(param)
+    end
+  end
 end

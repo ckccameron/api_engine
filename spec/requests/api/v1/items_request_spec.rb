@@ -33,4 +33,27 @@ describe "Item requests" do
     expect(body[:data].first[:attributes]).to have_key(:merchant_id)
     expect(body[:data].first[:attributes][:merchant_id]).to be_an(Integer)
   end
+
+  it "sends item based on unique id" do
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id)
+    id = item.id
+
+    get "/api/v1/items/#{id}"
+
+    expect(response).to be_successful
+
+    body = JSON.parse(response.body, symbolize_names: true)
+    
+    expect(body[:data]).to have_key(:id)
+    expect(body[:data]).to have_key(:type)
+    expect(body[:data]).to have_key(:attributes)
+    expect(body[:data][:id]).to eq(id.to_s)
+    expect(body[:data][:type]).to eq("item")
+    expect(body[:data][:attributes][:id]).to eq(id)
+    expect(body[:data][:attributes][:name]).to eq(item.name)
+    expect(body[:data][:attributes][:description]).to eq(item.description)
+    expect(body[:data][:attributes][:unit_price]).to eq(item.unit_price)
+    expect(body[:data][:attributes][:merchant_id]).to eq(item.merchant_id)
+  end
 end

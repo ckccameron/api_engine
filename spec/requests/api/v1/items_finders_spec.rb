@@ -89,36 +89,44 @@ describe "Items finder requests" do
     expect(item_result[:data][:attributes][:merchant_id]).to be_an(Integer)
   end
 
-  it "can return index of merchants that match search criteria" do
-    create(:merchant, name: "Basketball Blvd")
-    create(:merchant, name: "Basketball Bonanza")
-    create(:merchant, name: "Full Court Press")
-    create(:merchant, name: "Goooaaalll")
+  it "can return index of items that match search criteria" do
+    merchant = create(:merchant)
+    item1 = create(:item, name: "Boomshakalaka", merchant_id: merchant.id)
+    item2 = create(:item, name: "Boom Boom Clap", merchant_id: merchant.id)
+    item3 = create(:item, name: "Kaboom", merchant_id: merchant.id)
+    item4 = create(:item, name: "Explosion", merchant_id: merchant.id)
 
     attribute = "name"
-    query = "ball"
+    query = "boom"
 
-    get "/api/v1/merchants/find_all?#{attribute}=#{query}"
+    get "/api/v1/items/find_all?#{attribute}=#{query}"
 
     expect(response).to be_successful
 
-    merchants_results = JSON.parse(response.body, symbolize_names: true)
-    names = merchants_results[:data].map do |merchant|
-      merchant[:attributes][:name].downcase
+    items_results = JSON.parse(response.body, symbolize_names: true)
+    names = items_results[:data].map do |item|
+      item[:attributes][:name].downcase
     end
-    expect(merchants_results[:data].count).to eq(2)
-    expect(merchants_results[:data]).to be_an(Array)
-    merchants_results[:data].each do |merchant|
-      expect(merchant).to have_key(:id)
-      expect(merchant).to have_key(:type)
-      expect(merchant).to have_key(:attributes)
-      expect(merchant[:type]).to eq("merchant")
-      expect(merchant[:attributes]).to have_key(:id)
-      expect(merchant[:attributes][:id]).to be_an(Integer)
-      expect(merchant[:attributes]).to have_key(:name)
-      expect(merchant[:attributes][:name]).to be_an(String)
+    expect(items_results[:data].count).to eq(3)
+    expect(items_results[:data]).to be_an(Array)
+    items_results[:data].each do |item|
+      expect(item).to have_key(:id)
+      expect(item).to have_key(:type)
+      expect(item).to have_key(:attributes)
+      expect(item[:type]).to eq("item")
+      expect(item[:attributes]).to have_key(:id)
+      expect(item[:attributes][:id]).to be_an(Integer)
+      expect(item[:attributes]).to have_key(:name)
+      expect(item[:attributes][:name]).to be_a(String)
+      expect(item[:attributes]).to have_key(:description)
+      expect(item[:attributes][:description]).to be_a(String)
+      expect(item[:attributes]).to have_key(:unit_price)
+      expect(item[:attributes][:unit_price]).to be_a(Float)
+      expect(item[:attributes]).to have_key(:merchant_id)
+      expect(item[:attributes][:merchant_id]).to be_an(Integer)
     end
     names.each do |name|
       expect(name).to include(query)
     end
+  end
 end

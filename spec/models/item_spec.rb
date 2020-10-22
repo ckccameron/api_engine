@@ -27,4 +27,14 @@ describe Item, type: :model do
     it { should have_many(:invoice_items) }
     # it { should have_many(:invoices).through(:invoice_items) }
   end
+
+  describe "class methods" do
+    it ".find_single_item(param)" do
+      merchant = create(:merchant)
+      item = create(:item, name: "Basketball", merchant_id: merchant.id)
+      param = {"name": "ball"}
+
+      expect(Item.find_single_item(param)).to eq(item)
+    end
+  end
 end

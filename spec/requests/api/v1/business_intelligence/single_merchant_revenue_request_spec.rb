@@ -7,9 +7,9 @@ describe "business intelligence requests" do
 
     merchant1 = create(:merchant)
 
-    item1 = create(:item, merchant: merchant1, unit_price: 10.00)
-    item2 = create(:item, merchant: merchant1, unit_price: 20.00)
-    item3 = create(:item, merchant: merchant1, unit_price: 30.00)
+    item1 = create(:item, merchant: merchant1, unit_price: 10.20)
+    item2 = create(:item, merchant: merchant1, unit_price: 20.30)
+    item3 = create(:item, merchant: merchant1, unit_price: 30.40)
 
     invoice1 = Invoice.create(customer: customer1, merchant: merchant1, status: "shipped")
     invoice2 = Invoice.create(customer: customer1, merchant: merchant1, status: "shipped")
@@ -40,7 +40,7 @@ describe "business intelligence requests" do
     expect(result[:data][:id]).to eq(nil)
     expect(result[:data]).to have_key(:attributes)
     expect(result[:data][:attributes]).to have_key(:revenue)
-    expect(result[:data][:attributes][:revenue]).to be_a(Float)
-    expect(result[:data][:attributes][:revenue]).to eq(110.00)
+    expect(result[:data][:attributes][:revenue][:revenue]).to be_a(Float)
+    expect(result[:data][:attributes][:revenue][:revenue]).to eq(111.60)
   end
 end

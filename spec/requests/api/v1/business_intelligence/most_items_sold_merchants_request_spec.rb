@@ -53,7 +53,7 @@ describe "business intelligence requests" do
     expect(response).to be_successful
 
     results = JSON.parse(response.body, symbolize_names: true)
-
+    
     expect(results[:data]).to be_an(Array)
     expect(results[:data].first).to have_key(:id)
     expect(results[:data].first).to have_key(:type)
@@ -64,5 +64,9 @@ describe "business intelligence requests" do
     expect(results[:data].first[:attributes]).to have_key(:name)
     expect(results[:data].first[:attributes][:name]).to be_a(String)
     expect(results[:data].count).to eq(3)
+    expect(results[:data][0][:id]).to include(merchant4.id.to_s)
+    expect(results[:data][1][:id]).to include(merchant3.id.to_s)
+    expect(results[:data][2][:id]).to include(merchant2.id.to_s)
+    expect(results[:data]).to_not include(merchant1.id.to_s)
   end
 end

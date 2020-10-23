@@ -27,11 +27,15 @@ describe RevenueFacade do
     start_date1 = 3.days.ago
     end_date1 = Date.today
     result1 = RevenueFacade.total_revenue_across_date_range(start_date1, end_date1)
+
+    expect(result1.class).to eq(Revenue)
     expect(result1.revenue).to eq(18.20)
 
     start_date2 = "2020-10-21"
     end_date2 = "2020-10-22"
     result2 = RevenueFacade.total_revenue_across_date_range(start_date2, end_date2)
+    
+    expect(result2.class).to eq(Revenue)
     expect(result2.revenue).to eq(14.60)
   end
 end

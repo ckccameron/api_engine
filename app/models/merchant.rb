@@ -3,6 +3,7 @@ class Merchant < ApplicationRecord
 
   has_many :items
   has_many :invoices
+  has_many :invoice_items, through: :invoices
   has_many :transactions, through: :invoices
 
   scope :date_search, -> (param) { where("to_char(#{param.keys.first}, 'yyyy-mon-dd-HH-MI-SS') ILIKE ?", "%#{param.values.first}%") }
@@ -44,5 +45,13 @@ class Merchant < ApplicationRecord
     .group(:id)
     .order(items_sold: :desc)
     .limit(quantity)
+  end
+
+  def self.revenue(merchant_id)
+    binding.pry
+    invoice_items.joins(:invoice, :transactions)
+    .merge(Transaction.success)
+    .where(invoices: {status: "shipped"})
+    .sum("quantity * unit_price")
   end
 end

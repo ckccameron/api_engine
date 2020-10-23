@@ -23,4 +23,14 @@ class Merchant < ApplicationRecord
       attribute_search(param)
     end
   end
+
+  def self.most_revenue(quantity)
+    Merchant.select("merchants.*, sum(quantity * unit_price) as revenue")
+    .joins(invoices: [:invoice_items, :transactions])
+    .merge(Transaction.success)
+    .where(invoices: {status: "shipped"})
+    .group(:id)
+    .order(revenue: :desc)
+    .limit(quantity)
+  end
 end

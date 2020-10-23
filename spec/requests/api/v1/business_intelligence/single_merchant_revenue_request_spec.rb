@@ -34,13 +34,13 @@ describe "business intelligence requests" do
     expect(response).to be_successful
 
     result = JSON.parse(response.body, symbolize_names: true)
-
+    
     expect(result).to be_a(Hash)
     expect(result[:data]).to have_key(:id)
     expect(result[:data][:id]).to eq(nil)
     expect(result[:data]).to have_key(:attributes)
     expect(result[:data][:attributes]).to have_key(:revenue)
-    expect(result[:data][:attributes][:revenue][:revenue]).to be_a(Float)
-    expect(result[:data][:attributes][:revenue][:revenue]).to eq(111.60)
+    expect(result[:data][:attributes][:revenue]).to be_a(Float)
+    expect(result[:data][:attributes][:revenue]).to eq(111.60)
   end
 end

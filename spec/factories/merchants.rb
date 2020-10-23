@@ -2,6 +2,6 @@ require 'faker'
 
 FactoryBot.define do
   factory :merchant do
-    name { Faker::Company.unique.name }
+    name { Faker::Science.unique.element }
   end
 end

@@ -1,6 +1,9 @@
 class Merchant < ApplicationRecord
+  validates :name, presence: true
+
   has_many :items
   has_many :invoices
+  has_many :invoice_items, through: :invoices
   has_many :transactions, through: :invoices
 
   scope :date_search, -> (param) { where("to_char(#{param.keys.first}, 'yyyy-mon-dd-HH-MI-SS') ILIKE ?", "%#{param.values.first}%") }
@@ -22,5 +25,32 @@ class Merchant < ApplicationRecord
     else
       attribute_search(param)
     end
+  end
+
+  def self.most_revenue(quantity)
+    Merchant.select("merchants.*, sum(quantity * unit_price) as revenue")
+    .joins(invoices: [:invoice_items, :transactions])
+    .merge(Transaction.success)
+    .where(invoices: {status: "shipped"})
+    .group(:id)
+    .order(revenue: :desc)
+    .limit(quantity)
+  end
+
+  def self.most_items_sold(quantity)
+    Merchant.select("merchants.*, sum(quantity) as items_sold")
+    .joins(invoices: [:invoice_items, :transactions])
+    .merge(Transaction.success)
+    .where(invoices: {status: "shipped"})
+    .group(:id)
+    .order(items_sold: :desc)
+    .limit(quantity)
+  end
+
+  def self.revenue(merchant_id)
+    joins(invoices: [:invoice_items, :transactions])
+    .merge(Transaction.success)
+    .where(invoices: {status: "shipped"})
+    .sum("quantity * unit_price")
   end
 end

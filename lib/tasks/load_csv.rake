@@ -34,7 +34,9 @@ task import: :environment do
   puts "Invoices import: Successful"
 
   CSV.foreach('./db/data/invoice_items.csv', headers: true, header_converters: :symbol, converters: :all) do |row|
-    InvoiceItem.create(row.to_h)
+    invoice_item = InvoiceItem.create(row.to_h)
+    invoice_item.unit_price = (row[:unit_price] / 100.00)
+    invoice_item.save
   end
   puts "Invoice Items import: Successful"
 

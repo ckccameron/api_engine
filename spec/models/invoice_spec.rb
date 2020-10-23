@@ -20,11 +20,16 @@ describe Invoice, type: :model do
     expect(invoice.updated_at).to eq("2012-03-12 10:54:13 UTC")
   end
 
+  describe "validations" do
+    it { should validate_presence_of(:customer_id) }
+    it { should validate_presence_of(:merchant_id) }
+    it { should validate_presence_of(:status) }
+  end
+
   describe "relationships" do
     it { should belong_to(:customer) }
     it { should belong_to(:merchant) }
     it { should have_many(:invoice_items) }
-    # it { should have_many(:items).through(:invoice_items) }
     it { should have_many(:transactions) }
   end
 end

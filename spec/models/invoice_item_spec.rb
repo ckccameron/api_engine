@@ -22,6 +22,13 @@ describe InvoiceItem, type: :model do
     expect(invoice_item.updated_at).to eq("2012-03-27 14:54:11 UTC")
   end
 
+  describe "validations" do
+    it { should validate_presence_of(:item_id) }
+    it { should validate_presence_of(:invoice_id) }
+    it { should validate_presence_of(:quantity) }
+    it { should validate_presence_of(:unit_price) }
+  end
+
   describe "relationships" do
     it { should belong_to(:item) }
     it { should belong_to(:invoice) }

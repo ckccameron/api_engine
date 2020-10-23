@@ -1,6 +1,6 @@
 class Merchant < ApplicationRecord
   validates :name, presence: true
-  
+
   has_many :items
   has_many :invoices
   has_many :transactions, through: :invoices
@@ -33,6 +33,16 @@ class Merchant < ApplicationRecord
     .where(invoices: {status: "shipped"})
     .group(:id)
     .order(revenue: :desc)
+    .limit(quantity)
+  end
+
+  def self.most_items_sold(quantity)
+    Merchant.select("merchants.*, sum(quantity) as items_sold")
+    .joins(invoices: [:invoice_items, :transactions])
+    .merge(Transaction.success)
+    .where(invoices: {status: "shipped"})
+    .group(:id)
+    .order(items_sold: :desc)
     .limit(quantity)
   end
 end

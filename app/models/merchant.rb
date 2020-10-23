@@ -48,8 +48,7 @@ class Merchant < ApplicationRecord
   end
 
   def self.revenue(merchant_id)
-    binding.pry
-    invoice_items.joins(:invoice, :transactions)
+    joins(invoices: [:invoice_items, :transactions])
     .merge(Transaction.success)
     .where(invoices: {status: "shipped"})
     .sum("quantity * unit_price")

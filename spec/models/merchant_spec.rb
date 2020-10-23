@@ -15,6 +15,10 @@ describe Merchant, type: :model do
     expect(merchant.updated_at).to eq("2012-03-27 14:53:59 UTC")
   end
 
+  describe "validations" do
+    it { should validate_presence_of(:name) }
+  end
+
   describe "relationships" do
     it { should have_many(:items) }
     it { should have_many(:invoices) }

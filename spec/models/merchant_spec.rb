@@ -131,5 +131,38 @@ describe Merchant, type: :model do
       expect(Merchant.most_items_sold(quantity)).to eq([merchant4, merchant3])
       expect(Merchant.most_items_sold(quantity)).to_not include(merchant1, merchant2)
     end
+
+    it ".revenue(merchant_id)" do
+      customer1 = create(:customer)
+      customer2 = create(:customer)
+
+      merchant = create(:merchant)
+
+      item1 = create(:item, merchant: merchant, unit_price: 20.30)
+      item2 = create(:item, merchant: merchant, unit_price: 27.55)
+      item3 = create(:item, merchant: merchant, unit_price: 82.35)
+
+      invoice1 = Invoice.create(customer: customer1, merchant: merchant, status: "shipped")
+      invoice2 = Invoice.create(customer: customer1, merchant: merchant, status: "shipped")
+      invoice3 = Invoice.create(customer: customer2, merchant: merchant, status: "shipped")
+      invoice4 = Invoice.create(customer: customer2, merchant: merchant, status: "shipped")
+      invoice5 = Invoice.create(customer: customer2, merchant: merchant, status: "shipped")
+
+      item_invoice1 = InvoiceItem.create(item: item1, invoice: invoice1, quantity: 1, unit_price: item1.unit_price)
+      item_invoice2 = InvoiceItem.create(item: item2, invoice: invoice2, quantity: 1, unit_price: item2.unit_price)
+      item_invoice3 = InvoiceItem.create(item: item2, invoice: invoice3, quantity: 1, unit_price: item2.unit_price)
+      item_invoice4 = InvoiceItem.create(item: item3, invoice: invoice4, quantity: 1, unit_price: item3.unit_price)
+      item_invoice5 = InvoiceItem.create(item: item3, invoice: invoice5, quantity: 1, unit_price: item3.unit_price)
+
+      transaction1 = Transaction.create(invoice: invoice1, credit_card_number: '111111111', credit_card_expiration_date: nil, result: "success")
+      transaction2 = Transaction.create(invoice: invoice2, credit_card_number: '111111111', credit_card_expiration_date: nil, result: "success")
+      transaction3 = Transaction.create(invoice: invoice3, credit_card_number: '222222222', credit_card_expiration_date: nil, result: "success")
+      transaction4 = Transaction.create(invoice: invoice4, credit_card_number: '222222222', credit_card_expiration_date: nil, result: "success")
+      transaction5 = Transaction.create(invoice: invoice5, credit_card_number: '222222222', credit_card_expiration_date: nil, result: "success")
+
+      merchant_id = merchant.id
+
+      expect(Merchant.revenue(merchant_id)).to eq(240.10)
+    end
   end
 end
